@@ -8,7 +8,9 @@ jobs:
     working_directory: ~/circleci-demo-workflows
     steps:
       - checkout
-      - run: bundle install --path vendor/bundle
+      - run:
+          name: install vendor bundle
+          command: bundle install --path vendor/bundle
       - run: bundle exec rake db:create db:schema:load
       - run:
           name: Run tests
