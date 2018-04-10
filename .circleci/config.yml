@@ -35,8 +35,9 @@ jobs:
           command: curl -fL https://getcli.jfrog.io | sh
 
       - run:
-          name: Configur Articatory Instance with JFrog CLI
-          command: ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD --interactive false
+          name: Configure Articatory Instance with JFrog CLI
+          # --interactive false
+          command: ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD 
    
       - checkout
       - run:
