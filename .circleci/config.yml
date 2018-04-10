@@ -37,9 +37,10 @@ jobs:
       - run:
           name: Configure Articatory Instance with JFrog CLI
           # --interactive false
-          command: echo ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
-          command: ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD 
-   
+          command: |
+                   echo ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
+                   ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
+  
       - checkout
       - run:
           name: install vendor bundle
@@ -80,5 +81,5 @@ workflows:
   build:
     jobs:
       - "ruby-2.2"
-      - "ruby-2.3"
-      - "ruby-2.4"
+      #- "ruby-2.3"
+      #- "ruby-2.4"
