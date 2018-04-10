@@ -30,6 +30,14 @@ jobs:
       - image: circleci/postgres:9.4.12-alpine
     working_directory: ~/circleci-demo-workflows
     steps:
+      - run:
+          name: Install JFrog CLI
+          command: curl -fL https://getcli.jfrog.io | sh
+
+      - run:
+          name: Configur Articatory Instance with JFrog CLI
+          command: ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD --interactive false
+   
       - checkout
       - run:
           name: install vendor bundle
