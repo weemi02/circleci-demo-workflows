@@ -12,7 +12,26 @@ ConfigJFrog: &ConfigJFrog
           command: |
                    echo ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
                    ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
-    
+
+Ruby2.2: &Ruby2.2
+    docker:
+      - image: circleci/ruby:2.3-node-browsers
+      - image: circleci/postgres:9.4.12-alpine
+    working_directory: ~/circleci-demo-workflows
+    steps:
+      - *InstallJFrog
+      
+      - *ConfigJFrog
+      
+      - checkout
+      - run:
+          name: install vendor bundle
+          command: bundle install --path vendor/bundle
+      - run: bundle exec rake db:create db:schema:load
+      - run:
+          name: Run tests
+          command: rake
+
 jobs:
 
   build:
@@ -35,23 +54,7 @@ jobs:
           command: rake
 
   "ruby-2.2":
-    docker:
-      - image: circleci/ruby:2.3-node-browsers
-      - image: circleci/postgres:9.4.12-alpine
-    working_directory: ~/circleci-demo-workflows
-    steps:
-      - *InstallJFrog
-      
-      - *ConfigJFrog
-      
-      - checkout
-      - run:
-          name: install vendor bundle
-          command: bundle install --path vendor/bundle
-      - run: bundle exec rake db:create db:schema:load
-      - run:
-          name: Run tests
-          command: rake
+      <<: *Ruby2.2
 
   "ruby-2.3":
     docker:
