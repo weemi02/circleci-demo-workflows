@@ -1,11 +1,17 @@
 version: 2.0
 
-dependencies:
-  pre:
-    # Install JFrog CLI
-    - curl -fL https://getcli.jfrog.io | sh
-    # Configure Artifactory instance with JFrog CLI
-    - ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD --interactive false
+InstallJFrog: &InstallJFrog
+      - run:
+          name: Install JFrog CLI
+          command: curl -fL https://getcli.jfrog.io | sh
+          
+ConfigJFrog: &ConfigJFrog
+      - run:
+          name: Configure Articatory Instance with JFrog CLI
+          # --interactive false
+          command: |
+                   echo ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
+                   ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
     
 jobs:
 
@@ -30,17 +36,10 @@ jobs:
       - image: circleci/postgres:9.4.12-alpine
     working_directory: ~/circleci-demo-workflows
     steps:
-      - run:
-          name: Install JFrog CLI
-          command: curl -fL https://getcli.jfrog.io | sh
-
-      - run:
-          name: Configure Articatory Instance with JFrog CLI
-          # --interactive false
-          command: |
-                   echo ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
-                   ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_PASSWORD
-  
+      <<: *InstallJFrog
+      
+      <<: *ConfigJFrog
+      
       - checkout
       - run:
           name: install vendor bundle
