@@ -1,12 +1,12 @@
 version: 2.0
 
 InstallJFrog: &InstallJFrog
-      - run:
+      run:
           name: Install JFrog CLI
           command: curl -fL https://getcli.jfrog.io | sh
           
 ConfigJFrog: &ConfigJFrog
-      - run:
+      run:
           name: Configure Articatory Instance with JFrog CLI
           # --interactive false
           command: |
@@ -21,9 +21,9 @@ jobs:
       - image: circleci/postgres:9.4.12-alpine
     working_directory: ~/circleci-demo-workflows
     steps:
-      <<: *InstallJFrog
+      - *InstallJFrog
       
-      <<: *ConfigJFrog
+      - *ConfigJFrog
       
       - checkout
       - run:
